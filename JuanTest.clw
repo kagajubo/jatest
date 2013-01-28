@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CAboutDlg
+LastClass=CTestOemDlg
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "JuanTest.h"
@@ -12,21 +12,23 @@ Class1=CJuanTestApp
 Class2=CJuanTestDlg
 Class3=CAboutDlg
 
-ResourceCount=6
+ResourceCount=7
 Resource1=IDD_TEST_MODULE
 Resource2=IDR_MAINFRAME
-Resource3=IDD_JUANTEST_SET
-Resource4=IDD_ABOUTBOX
-Resource5=IDD_OEM_MODULE
+Resource3=IDD_OEM_MODULE
+Resource4=IDD_JUANTEST_SET
+Resource5=IDD_ABOUTBOX
 Class4=CTestModuleDlg
 Class5=CTestOemDlg
-Resource6=IDD_DIALOG_TEST
+Resource6=IDD_JUANTEST_DIALOG
+Resource7=IDD_DIALOG_TEST
 
 [CLS:CJuanTestApp]
 Type=0
 HeaderFile=JuanTest.h
 ImplementationFile=JuanTest.cpp
 Filter=N
+LastObject=CJuanTestApp
 
 [CLS:CJuanTestDlg]
 Type=0
@@ -42,6 +44,7 @@ Type=0
 HeaderFile=JuanTestDlg.h
 ImplementationFile=JuanTestDlg.cpp
 Filter=D
+LastObject=CAboutDlg
 
 [DLG:IDD_ABOUTBOX]
 Type=1
@@ -140,4 +143,42 @@ HeaderFile=TestOemDlg.h
 ImplementationFile=TestOemDlg.cpp
 BaseClass=CDialog
 Filter=D
+
+[DLG:IDD_JUANTEST_DIALOG]
+Type=1
+Class=?
+ControlCount=33
+Control1=IDC_COMBO_DEV_TYPE,combobox,1344340226
+Control2=IDC_STATIC_DEV_TYPE,static,1342308352
+Control3=IDC_COMBO_DEV_TYPE2,combobox,1344340226
+Control4=IDC_STATIC_HDD_NUM,static,1342308352
+Control5=IDC_COMBO_DEV_TYPE3,combobox,1344340226
+Control6=IDC_STATIC_ERR_HANDLE,static,1342308352
+Control7=IDC_COMBO_DEV_TYPE4,combobox,1344340226
+Control8=IDC_STATIC_PING_NUM,static,1342308352
+Control9=IDC_COMBO_DEV_TYPE5,combobox,1344340226
+Control10=IDC_STATIC_TIME_SET_TYPE,static,1342308352
+Control11=IDC_COMBO_DEV_TYPE6,combobox,1344340226
+Control12=IDC_STATIC_COM_PORT,static,1342308352
+Control13=IDC_COMBO_DEV_TYPE7,combobox,1344340226
+Control14=IDC_STATIC_BAUD_RATE,static,1342308352
+Control15=IDC_COMBO_DEV_TYPE8,combobox,1344340226
+Control16=IDC_STATIC_RTC_DURATION,static,1342308352
+Control17=IDC_COMBO_DEV_TYPE9,combobox,1344340226
+Control18=IDC_STATIC_COM_TIMEOUT,static,1342308352
+Control19=IDC_COMBO_DEV_TYPE10,combobox,1344340226
+Control20=IDC_STATIC_CHN_SWITCH_TIME,static,1342308352
+Control21=IDC_TAB_MODULE,SysTabControl32,1350565888
+Control22=IDC_BUTTON_INFO,button,1342242816
+Control23=IDC_BUTTON_BOARD_TEST,button,1342242816
+Control24=IDC_BUTTON_WHOLE_TEST,button,1342242816
+Control25=IDC_BUTTON_EXIT,button,1342242816
+Control26=IDC_IPADDRESS_DEV_IP,SysIPAddress32,1342177280
+Control27=IDC_IPADDRESS_DEV_NM,SysIPAddress32,1342177280
+Control28=IDC_IPADDRESS_DEV_GW,SysIPAddress32,1342177280
+Control29=IDC_STATIC_DEV_IP,static,1342308352
+Control30=IDC_STATIC_DEV_GW,static,1342308352
+Control31=IDC_STATIC_DEV_NM,static,1342308352
+Control32=IDC_IPADDRESS_DEV_NM2,SysIPAddress32,1476395008
+Control33=IDC_STATIC_PC_IP,static,1342308352
 
