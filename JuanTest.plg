@@ -1,0 +1,58 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: JuanTest - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1AA.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FR"Debug/" /Fp"Debug/JuanTest.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"E:\codes\JuanTest\JuanTestDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1AA.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1AB.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"Debug/JuanTest.pdb" /debug /machine:I386 /out:"Debug/JuanTest.exe" /pdbtype:sept 
+.\Debug\comm.obj
+.\Debug\JuanTest.obj
+.\Debug\JuanTestDlg.obj
+.\Debug\NetworkComm.obj
+.\Debug\SerialComm.obj
+.\Debug\StdAfx.obj
+.\Debug\TestModule.obj
+.\Debug\TestSystem.obj
+.\Debug\JuanTest.res
+.\Debug\TestModuleDlg.obj
+.\Debug\TestOemDlg.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1AB.tmp"
+<h3>Output Window</h3>
+Compiling...
+JuanTestDlg.cpp
+Linking...
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1AD.tmp" with contents
+[
+/nologo /o"Debug/JuanTest.bsc" 
+.\Debug\StdAfx.sbr
+.\Debug\comm.sbr
+.\Debug\JuanTest.sbr
+.\Debug\JuanTestDlg.sbr
+.\Debug\NetworkComm.sbr
+.\Debug\SerialComm.sbr
+.\Debug\TestModule.sbr
+.\Debug\TestSystem.sbr
+.\Debug\TestModuleDlg.sbr
+.\Debug\TestOemDlg.sbr]
+Creating command line "bscmake.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1AD.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+JuanTest.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

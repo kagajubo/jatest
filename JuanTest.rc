@@ -1,0 +1,468 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 4, 2\r\n"
+    "#pragma code_page(936)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\JuanTest.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""l.chs\\afxres.rc""          // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\JuanTest.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "关于 JuanTest"
+FONT 9, "宋体"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "JuanTest 1.0 版",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "版权所有 (C) 2013",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "确定",IDOK,178,7,50,14,WS_GROUP
+END
+
+IDD_JUANTEST_SET DIALOGEX 0, 0, 261, 223
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "JuanTest"
+FONT 12, "微软雅黑"
+BEGIN
+    COMBOBOX        IDC_COMBO_DEV_TYPE,52,9,49,30,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "设备型号",IDC_STATIC_DEV_TYPE,8,10,42,9
+    COMBOBOX        IDC_COMBO_DEV_TYPE2,52,21,49,30,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "硬盘数",IDC_STATIC_HDD_NUM,8,21,42,9
+    COMBOBOX        IDC_COMBO_DEV_TYPE3,52,33,49,30,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "失败处理",IDC_STATIC_ERR_HANDLE,8,32,42,9
+    COMBOBOX        IDC_COMBO_DEV_TYPE4,52,45,49,30,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Ping包数",IDC_STATIC_PING_NUM,8,43,42,9
+    COMBOBOX        IDC_COMBO_DEV_TYPE5,52,57,49,30,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "时间设置",IDC_STATIC_TIME_SET_TYPE,8,58,42,9
+    COMBOBOX        IDC_COMBO_DEV_TYPE6,52,68,49,30,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "串口",IDC_STATIC_COM_PORT,8,68,42,9
+    COMBOBOX        IDC_COMBO_DEV_TYPE7,52,79,49,30,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "波特率",IDC_STATIC_BAUD_RATE,8,78,42,9
+    COMBOBOX        IDC_COMBO_DEV_TYPE8,52,90,49,30,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "时间容差",IDC_STATIC_RTC_DURATION,8,88,42,9
+    COMBOBOX        IDC_COMBO_DEV_TYPE9,157,53,94,30,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "串口读超时",IDC_STATIC_COM_TIMEOUT,113,57,42,9
+    COMBOBOX        IDC_COMBO_DEV_TYPE10,157,65,94,30,CBS_DROPDOWN | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "通道切换时间",IDC_STATIC_CHN_SWITCH_TIME,113,69,42,9
+    CONTROL         "Tab1",IDC_TAB_MODULE,"SysTabControl32",WS_BORDER,7,107,
+                    243,90
+    PUSHBUTTON      "关于",IDC_BUTTON_INFO,188,207,23,9
+    PUSHBUTTON      "主板测试",IDC_BUTTON_BOARD_TEST,15,206,48,10
+    PUSHBUTTON      "整机测试",IDC_BUTTON_WHOLE_TEST,76,206,46,10
+    PUSHBUTTON      "退出",IDC_BUTTON_EXIT,223,206,22,10
+    CONTROL         "IPAddress1",IDC_IPADDRESS_DEV_IP,"SysIPAddress32",0x0,
+                    157,20,94,11
+    CONTROL         "IPAddress1",IDC_IPADDRESS_DEV_NM,"SysIPAddress32",0x0,
+                    157,42,94,11
+    CONTROL         "IPAddress1",IDC_IPADDRESS_DEV_GW,"SysIPAddress32",0x0,
+                    157,31,94,11
+    LTEXT           "设备IP",IDC_STATIC_DEV_IP,113,21,42,9
+    LTEXT           "网关",IDC_STATIC_DEV_GW,113,33,42,9
+    LTEXT           "子网掩码",IDC_STATIC_DEV_NM,113,45,42,9
+    CONTROL         "IPAddress1",IDC_IPADDRESS_DEV_NM2,"SysIPAddress32",
+                    WS_DISABLED,157,9,94,11
+    LTEXT           "IP地址",IDC_STATIC_PC_IP,113,9,42,9
+END
+
+IDD_TEST_MODULE DIALOG DISCARDABLE  0, 0, 231, 103
+STYLE WS_CHILD
+FONT 12, "System"
+BEGIN
+    CONTROL         "按钮",IDC_CHECK_KEY,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,17,17,32,10
+    CONTROL         "设备信息",IDC_CHECK_INFO,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,17,28,48,10
+    CONTROL         "鼠标",IDC_CHECK_MOUSE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,17,39,32,10
+    CONTROL         "音频",IDC_CHECK_AUDIO,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,17,50,32,10
+    CONTROL         "网卡",IDC_CHECK_NETWORK,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,17,61,32,10
+    CONTROL         "录像",IDC_CHECK_RECORD,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,17,72,32,10
+    CONTROL         "系列号",IDC_CHECK_SN,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,80,17,40,10
+    CONTROL         "报警输出",IDC_CHECK_ALARM_OUT,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,80,28,48,10
+    CONTROL         "硬盘",IDC_CHECK_HDD,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,80,39,32,10
+    CONTROL         "图像测试",IDC_CHECK_VIDEO,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,80,50,48,10
+    CONTROL         "云台测试",IDC_CHECK_PTZ,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,80,61,48,10
+    CONTROL         "回放",IDC_CHECK_PLAYBACK,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,80,72,32,10
+    CONTROL         "前面板",IDC_CHECK_FRONT_PANNEL,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,147,17,40,10
+    CONTROL         "RTC设置",IDC_CHECK_RTC_SET,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,147,28,46,10
+    CONTROL         "红外摇控",IDC_CHECK_IR,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,147,39,48,10
+    CONTROL         "蜂鸣器",IDC_CHECK_BEEP,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,147,50,40,10
+    CONTROL         "U盘",IDC_CHECK_UDISK,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,147,61,29,10
+    CONTROL         "RTC测试",IDC_CHECK_RTC_TEST,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,147,72,46,10
+END
+
+IDD_OEM_MODULE DIALOG DISCARDABLE  0, 0, 187, 94
+STYLE WS_CHILD
+FONT 12, "System"
+BEGIN
+    CONTROL         "Logo",IDC_CHECK_LOGO,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,5,32,10
+    CONTROL         "显示型号",IDC_CHECK_TYPE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,20,46,10
+    CONTROL         "显示设备名",IDC_CHECK_DEV_NAME,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,35,54,10
+    CONTROL         "默认语言",IDC_CHECK_DEFAULT_LANGUAGE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,50,46,10
+END
+
+IDD_DIALOG_TEST DIALOG DISCARDABLE  0, 0, 269, 246
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "JUAN TEST"
+FONT 10, "System"
+BEGIN
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404B0"
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "JuanTest Microsoft 基础类应用程序\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "JuanTest\0"
+            VALUE "LegalCopyright", "版权所有 (C) 2013\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "JuanTest.EXE\0"
+            VALUE "ProductName", "JuanTest 应用程序\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_JUANTEST_SET, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 254
+        VERTGUIDE, 101
+        VERTGUIDE, 250
+        TOPMARGIN, 9
+        BOTTOMMARGIN, 216
+        HORZGUIDE, 79
+        HORZGUIDE, 107
+        HORZGUIDE, 197
+    END
+
+    IDD_TEST_MODULE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 224
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 96
+    END
+
+    IDD_OEM_MODULE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 87
+    END
+
+    IDD_DIALOG_TEST, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 262
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 239
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_JUANTEST_SET DLGINIT
+BEGIN
+    IDC_COMBO_DEV_TYPE, 0x403, 7, 0
+0x414a, 0x3237, 0x3430, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 7, 0
+0x414a, 0x3237, 0x3830, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 7, 0
+0x414a, 0x3237, 0x3631, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 7, 0
+0x414a, 0x3237, 0x3432, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 7, 0
+0x414a, 0x3237, 0x3233, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 5, 0
+0x4c54, 0x3430, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 5, 0
+0x4c54, 0x3830, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 5, 0
+0x4c54, 0x3631, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 5, 0
+0x4c54, 0x3432, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 5, 0
+0x4c54, 0x3233, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 6, 0
+0x3031, 0x3430, 0x0041, 
+    IDC_COMBO_DEV_TYPE, 0x403, 6, 0
+0x3031, 0x3430, 0x004e, 
+    IDC_COMBO_DEV_TYPE, 0x403, 6, 0
+0x3031, 0x3430, 0x005a, 
+    IDC_COMBO_DEV_TYPE, 0x403, 6, 0
+0x3031, 0x3830, 0x005a, 
+    IDC_COMBO_DEV_TYPE, 0x403, 7, 0
+0x414a, 0x3837, 0x3430, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 7, 0
+0x414a, 0x3837, 0x3830, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 7, 0
+0x414a, 0x3837, 0x3631, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 7, 0
+0x414a, 0x3038, 0x3830, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 7, 0
+0x414a, 0x3038, 0x3631, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 7, 0
+0x414a, 0x3138, 0x3631, "\000" 
+    IDC_COMBO_DEV_TYPE, 0x403, 8, 0
+0x4544, 0x4146, 0x4c55, 0x0054, 
+    IDC_COMBO_DEV_TYPE2, 0x403, 2, 0
+0x0031, 
+    IDC_COMBO_DEV_TYPE2, 0x403, 2, 0
+0x0032, 
+    IDC_COMBO_DEV_TYPE2, 0x403, 2, 0
+0x0033, 
+    IDC_COMBO_DEV_TYPE2, 0x403, 2, 0
+0x0034, 
+    IDC_COMBO_DEV_TYPE3, 0x403, 2, 0
+0x0031, 
+    IDC_COMBO_DEV_TYPE3, 0x403, 2, 0
+0x0032, 
+    IDC_COMBO_DEV_TYPE3, 0x403, 2, 0
+0x0033, 
+    IDC_COMBO_DEV_TYPE3, 0x403, 2, 0
+0x0034, 
+    IDC_COMBO_DEV_TYPE4, 0x403, 2, 0
+0x0031, 
+    IDC_COMBO_DEV_TYPE4, 0x403, 2, 0
+0x0032, 
+    IDC_COMBO_DEV_TYPE4, 0x403, 2, 0
+0x0033, 
+    IDC_COMBO_DEV_TYPE4, 0x403, 2, 0
+0x0034, 
+    IDC_COMBO_DEV_TYPE5, 0x403, 2, 0
+0x0031, 
+    IDC_COMBO_DEV_TYPE5, 0x403, 2, 0
+0x0032, 
+    IDC_COMBO_DEV_TYPE5, 0x403, 2, 0
+0x0033, 
+    IDC_COMBO_DEV_TYPE5, 0x403, 2, 0
+0x0034, 
+    IDC_COMBO_DEV_TYPE6, 0x403, 2, 0
+0x0031, 
+    IDC_COMBO_DEV_TYPE6, 0x403, 2, 0
+0x0032, 
+    IDC_COMBO_DEV_TYPE6, 0x403, 2, 0
+0x0033, 
+    IDC_COMBO_DEV_TYPE6, 0x403, 2, 0
+0x0034, 
+    IDC_COMBO_DEV_TYPE7, 0x403, 2, 0
+0x0031, 
+    IDC_COMBO_DEV_TYPE7, 0x403, 2, 0
+0x0032, 
+    IDC_COMBO_DEV_TYPE7, 0x403, 2, 0
+0x0033, 
+    IDC_COMBO_DEV_TYPE7, 0x403, 2, 0
+0x0034, 
+    IDC_COMBO_DEV_TYPE8, 0x403, 2, 0
+0x0031, 
+    IDC_COMBO_DEV_TYPE8, 0x403, 2, 0
+0x0032, 
+    IDC_COMBO_DEV_TYPE8, 0x403, 2, 0
+0x0033, 
+    IDC_COMBO_DEV_TYPE8, 0x403, 2, 0
+0x0034, 
+    IDC_COMBO_DEV_TYPE9, 0x403, 2, 0
+0x0031, 
+    IDC_COMBO_DEV_TYPE9, 0x403, 2, 0
+0x0032, 
+    IDC_COMBO_DEV_TYPE9, 0x403, 2, 0
+0x0033, 
+    IDC_COMBO_DEV_TYPE9, 0x403, 2, 0
+0x0034, 
+    IDC_COMBO_DEV_TYPE10, 0x403, 2, 0
+0x0031, 
+    IDC_COMBO_DEV_TYPE10, 0x403, 2, 0
+0x0032, 
+    IDC_COMBO_DEV_TYPE10, 0x403, 2, 0
+0x0033, 
+    IDC_COMBO_DEV_TYPE10, 0x403, 2, 0
+0x0034, 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "关于 JuanTest(&A)..."
+    IDP_SOCKETS_INIT_FAILED "Windows 通信端口初始化失败。"
+END
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE 4, 2
+#pragma code_page(936)
+#endif //_WIN32
+#include "res\JuanTest.rc2"  // non-Microsoft Visual C++ edited resources
+#include "l.chs\afxres.rc"          // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
