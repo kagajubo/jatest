@@ -2,26 +2,29 @@
 
 [General Info]
 Version=1
-LastClass=CTestOemDlg
+LastClass=CTestDialog
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "JuanTest.h"
 
-ClassCount=5
+ClassCount=7
 Class1=CJuanTestApp
 Class2=CJuanTestDlg
 Class3=CAboutDlg
 
-ResourceCount=7
-Resource1=IDD_TEST_MODULE
+ResourceCount=8
+Resource1=IDD_OEM_MODULE
 Resource2=IDR_MAINFRAME
-Resource3=IDD_OEM_MODULE
+Resource3=IDD_JUANTEST_DIALOG
 Resource4=IDD_JUANTEST_SET
-Resource5=IDD_ABOUTBOX
+Resource5=IDD_TEST_MODULE
 Class4=CTestModuleDlg
 Class5=CTestOemDlg
-Resource6=IDD_JUANTEST_DIALOG
+Resource6=IDD_ABOUTBOX
+Class6=CDoTestDlg
 Resource7=IDD_DIALOG_TEST
+Class7=CTestDialog
+Resource8=IDD_DIALOG1
 
 [CLS:CJuanTestApp]
 Type=0
@@ -89,8 +92,23 @@ Control4=IDC_CHECK_DEFAULT_LANGUAGE,button,1342242819
 
 [DLG:IDD_DIALOG_TEST]
 Type=1
-Class=?
-ControlCount=0
+Class=CDoTestDlg
+ControlCount=15
+Control1=IDC_STATIC_DEVICE_TYPE,static,1342308352
+Control2=IDC_STATIC_SEL_COM,static,1342308352
+Control3=IDC_STATIC_SW_VERSION,static,1342308352
+Control4=IDC_STATIC_INPUT_SN,static,1342308352
+Control5=IDC_EDIT_DEVICE_TYPE,edit,1350631552
+Control6=IDC_EDIT_SEL_COM,edit,1350631552
+Control7=IDC_EDIT_SW_VERSION,edit,1350631552
+Control8=IDC_EDIT_INPUT_SN,edit,1350631552
+Control9=IDC_EDIT_BIG_MSG,edit,1350631552
+Control10=IDC_LIST_MID_MSG,listbox,1353777411
+Control11=IDC_BUTTON_GOTO_SETUP_DLG,button,1342242816
+Control12=IDC_BUTTON_SAVE_LOG,button,1342242816
+Control13=IDC_BUTTON_OPEN_COM,button,1342242816
+Control14=IDC_BUTTON_EXIT,button,1342242816
+Control15=IDC_LIST_SMALL_MSG,listbox,1353777411
 
 [DLG:IDD_JUANTEST_SET]
 Type=1
@@ -136,6 +154,7 @@ HeaderFile=TestModuleDlg.h
 ImplementationFile=TestModuleDlg.cpp
 BaseClass=CDialog
 Filter=D
+LastObject=CTestModuleDlg
 
 [CLS:CTestOemDlg]
 Type=0
@@ -143,32 +162,33 @@ HeaderFile=TestOemDlg.h
 ImplementationFile=TestOemDlg.cpp
 BaseClass=CDialog
 Filter=D
+LastObject=CTestOemDlg
 
 [DLG:IDD_JUANTEST_DIALOG]
 Type=1
-Class=?
+Class=CJuanTestDlg
 ControlCount=33
 Control1=IDC_COMBO_DEV_TYPE,combobox,1344340226
 Control2=IDC_STATIC_DEV_TYPE,static,1342308352
-Control3=IDC_COMBO_DEV_TYPE2,combobox,1344340226
+Control3=IDC_COMBO_HDD_NUM,combobox,1344340226
 Control4=IDC_STATIC_HDD_NUM,static,1342308352
-Control5=IDC_COMBO_DEV_TYPE3,combobox,1344340226
+Control5=IDC_COMBO_ERR_HANDLE,combobox,1344340226
 Control6=IDC_STATIC_ERR_HANDLE,static,1342308352
-Control7=IDC_COMBO_DEV_TYPE4,combobox,1344340226
+Control7=IDC_COMBO_PING_NUM,combobox,1344340226
 Control8=IDC_STATIC_PING_NUM,static,1342308352
-Control9=IDC_COMBO_DEV_TYPE5,combobox,1344340226
+Control9=IDC_COMBO_TIME_SET,combobox,1344340226
 Control10=IDC_STATIC_TIME_SET_TYPE,static,1342308352
-Control11=IDC_COMBO_DEV_TYPE6,combobox,1344340226
+Control11=IDC_COMBO_COM_LIST,combobox,1344340226
 Control12=IDC_STATIC_COM_PORT,static,1342308352
-Control13=IDC_COMBO_DEV_TYPE7,combobox,1344340226
+Control13=IDC_COMBO_BAUDRATE,combobox,1344340226
 Control14=IDC_STATIC_BAUD_RATE,static,1342308352
-Control15=IDC_COMBO_DEV_TYPE8,combobox,1344340226
+Control15=IDC_COMBO_TIME_DURATION,combobox,1344340226
 Control16=IDC_STATIC_RTC_DURATION,static,1342308352
-Control17=IDC_COMBO_DEV_TYPE9,combobox,1344340226
+Control17=IDC_COMBO_COM_TIMEOUT,combobox,1344340226
 Control18=IDC_STATIC_COM_TIMEOUT,static,1342308352
-Control19=IDC_COMBO_DEV_TYPE10,combobox,1344340226
+Control19=IDC_COMBO_CHN_SWITCH_TIME,combobox,1344340226
 Control20=IDC_STATIC_CHN_SWITCH_TIME,static,1342308352
-Control21=IDC_TAB_MODULE,SysTabControl32,1350565888
+Control21=IDC_TAB_MODULE,SysTabControl32,1342177280
 Control22=IDC_BUTTON_INFO,button,1342242816
 Control23=IDC_BUTTON_BOARD_TEST,button,1342242816
 Control24=IDC_BUTTON_WHOLE_TEST,button,1342242816
@@ -181,4 +201,33 @@ Control30=IDC_STATIC_DEV_GW,static,1342308352
 Control31=IDC_STATIC_DEV_NM,static,1342308352
 Control32=IDC_IPADDRESS_DEV_NM2,SysIPAddress32,1476395008
 Control33=IDC_STATIC_PC_IP,static,1342308352
+
+[CLS:CDoTestDlg]
+Type=0
+HeaderFile=DoTestDlg.h
+ImplementationFile=DoTestDlg.cpp
+BaseClass=CDialog
+Filter=D
+VirtualFilter=dWC
+LastObject=IDC_BUTTON_EXIT
+
+[DLG:IDD_DIALOG1]
+Type=1
+Class=CTestDialog
+ControlCount=6
+Control1=IDOK,button,1342242817
+Control2=IDCANCEL,button,1342242816
+Control3=IDC_EDIT1,edit,1350631552
+Control4=IDC_EDIT2,edit,1350631552
+Control5=IDC_BUTTON1,button,1342242816
+Control6=IDC_BUTTON2,button,1342242816
+
+[CLS:CTestDialog]
+Type=0
+HeaderFile=TestDialog.h
+ImplementationFile=TestDialog.cpp
+BaseClass=CDialog
+Filter=D
+LastObject=CTestDialog
+VirtualFilter=dWC
 

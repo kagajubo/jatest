@@ -4,12 +4,15 @@
 #include "stdafx.h"
 #include "JuanTest.h"
 #include "JuanTestDlg.h"
+#include "TestSystem.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
+
+static char *sz_inifile="E:/woks/vc++/JuanTest/conf/conf.ini";
 
 /////////////////////////////////////////////////////////////////////////////
 // CAboutDlg dialog used for App About
@@ -72,6 +75,9 @@ void CJuanTestDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CJuanTestDlg)
+	DDX_Control(pDX, IDC_COMBO_DEV_TYPE, m_dev_list);
+	DDX_Control(pDX, IDC_COMBO_COM_LIST, m_com_list);
+	DDX_Control(pDX, IDC_TAB_MODULE, m_tabModule);
 	//}}AFX_DATA_MAP
 }
 
@@ -80,10 +86,37 @@ BEGIN_MESSAGE_MAP(CJuanTestDlg, CDialog)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB_MODULE, OnSelchangeTabModule)
+	ON_BN_CLICKED(IDC_BUTTON_BOARD_TEST, OnButtonBoardTest)
+	ON_BN_CLICKED(IDC_BUTTON_EXIT, OnButtonExit)
+	ON_CBN_SELCHANGE(IDC_COMBO_COM_LIST, OnSelchangeComboComList)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
+void CJuanTestDlg::init_all_widgets()
+{
+	// load device name
+	m_dev_list.ResetContent();
+	for(int i=0; i < 255; i++){
+		CString key;
+		key.Format("DNAME_%d",i+1);
+		char s[512];
+		int ret=GetPrivateProfileString("DEVNAME",key,"",s,sizeof(s),sz_inifile);
+		if ( ret == 0 ){
+			printf("read total dev:%d\n",i);
+			break;	
+		}else if(ret < 0){
+			CString err_msg;
+			err_msg.Format("last err no: %d ",GetLastError());
+			MessageBox(err_msg);
+		}
+		m_dev_list.AddString(s);
+	}
+	//
+	
+}
+
 // CJuanTestDlg message handlers
 
 BOOL CJuanTestDlg::OnInitDialog()
@@ -115,11 +148,35 @@ BOOL CJuanTestDlg::OnInitDialog()
 	
 	// TODO: Add extra initialization here
 	// create tab control
+	m_tabModule.InsertItem(0,"测试选项");
+	m_tabModule.InsertItem(1,"OEM选项");
 	m_module_set.Create(IDD_TEST_MODULE,GetDlgItem(IDC_TAB_MODULE));
 	m_oem_set.Create(IDD_OEM_MODULE,GetDlgItem(IDC_TAB_MODULE));
 	CRect rect;
+	m_tabModule.GetClientRect(&rect);
+	rect.top+=30;
+	rect.bottom -=32;
+	rect.left+=1;
+	rect.right-=2;
+	m_module_set.MoveWindow(&rect);
+	m_oem_set.MoveWindow(&rect);
+	m_module_set.ShowWindow(true);
+	m_oem_set.ShowWindow(false);
+	m_tabModule.SetCurSel(0);
+	//load available serial ports
+	m_com_list.ResetContent();
+	for(int i=1; i < 256; i++){
+		CString s;
+		COMMCONFIG cc;
+		DWORD ccsize=sizeof(COMMCONFIG);
+		s.Format("COM%d",i);
+		if(GetDefaultCommConfig(s,&cc,&ccsize)==TRUE){
+			m_com_list.AddString(s);
+		}
+	}
+	//
+	init_all_widgets();
 
-	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -182,4 +239,52 @@ void CJuanTestDlg::OnOnCommMscomm()
 {
 	// TODO: Add your control notification handler code here
 	
+}
+
+void CJuanTestDlg::OnSelchangeTabModule(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	// TODO: Add your control notification handler code here
+	int sel=m_tabModule.GetCurSel();
+	if(sel==0){
+		m_module_set.ShowWindow(true);
+		m_oem_set.ShowWindow(false);
+	} else {
+		m_module_set.ShowWindow(false);
+		m_oem_set.ShowWindow(true);
+	}
+
+	*pResult = 0;
+}
+
+void CJuanTestDlg::OnButtonBoardTest() 
+{
+	// TODO: Add your control notification handler code here
+	this->ShowWindow(false);
+	m_test_dlg.Create(IDD_DIALOG_TEST,GetDlgItem(IDD_JUANTEST_DIALOG));
+	//m_test_dlg.DoModal();
+	m_test_dlg.ShowWindow(true);
+}
+
+void CJuanTestDlg::OnButtonExit() 
+{
+	// TODO: Add your control notification handler code here
+	PostQuitMessage(0);
+}
+
+void CJuanTestDlg::OnSelchangeComboComList() 
+{
+	/*
+	// TODO: Add your control notification handler code here
+	CString old_dev=g_TestSystem.comm->GetDevName();
+	if(old_dev!="null"){
+		if(g_TestSystem.comm->isOpen()==TRUE){
+			g_TestSystem.comm->Close();
+		}
+	}
+	CString new_dev;
+	GetDlgItem(IDC_COMBO_COM_LIST)->GetWindowText(new_dev);
+	g_TestSystem.comm->SetDevName(new_dev);
+	g_TestSystem.comm->Open();
+	printf("open dev:%s %s\n",new_dev,g_TestSystem.comm->isOpen() ? "true" : "false");
+	*/
 }

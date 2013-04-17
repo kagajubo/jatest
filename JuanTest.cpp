@@ -4,6 +4,9 @@
 #include "stdafx.h"
 #include "JuanTest.h"
 #include "JuanTestDlg.h"
+#include "TestDialog.h"
+
+#include "TestSystem.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -59,6 +62,24 @@ BOOL CJuanTestApp::InitInstance()
 #else
 	Enable3dControlsStatic();	// Call this when linking to MFC statically
 #endif
+
+
+	CTestDialog test;
+	m_pMainWnd = &test;
+	test.DoModal();
+	return false;
+	
+	// init test system
+	CTestSytem dvrtest;
+	CSerialComm	*serialcom=new CSerialComm();
+	ConfigArg_t conf;
+	conf.baudrate = 115200;
+	conf.com = 2;
+	conf.timeout = 5000;
+	serialcom->Init(conf);
+	serialcom->Open();
+	dvrtest.SetCommunication(serialcom);
+	dvrtest.modules.insert(-1,new CSerialGetInfo());
 
 	CJuanTestDlg dlg;
 	m_pMainWnd = &dlg;

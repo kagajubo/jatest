@@ -15,7 +15,9 @@ public:
 	CSerialComm();
 	~CSerialComm();
 	
-	BOOL Configure(ConfigArg_t conf);
+	BOOL Init(ConfigArg_t conf);
+	void SetDevName(CString name);
+	CString GetDevName();
 	
 	BOOL Open();
 	BOOL Close();
@@ -24,6 +26,10 @@ public:
 	
 	BOOL IsSystemBoot();
 	BOOL Handshake();
+
+public:
+	void SetBaudRate(int bd);
+	int  GetBaudRate();
 };
 
 // every modules

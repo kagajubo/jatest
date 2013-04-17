@@ -2,30 +2,51 @@
 #include <string.h>
 #include "SerialComm.h"
 
-
 // serial communication
 CSerialComm::CSerialComm()
 {
+	TRACE("new CSerialComm \n");
 	this->serialport=new cnComm();
+	type=COMM_TYPE_SERIAL;
+	dev_name="null";
 }
 
 CSerialComm::~CSerialComm()
 {
+	TRACE("delete CSerialComm \n");
 	this->Close();
 	delete this->serialport;
 }
 
-BOOL CSerialComm::Configure(ConfigArg_t conf)
+BOOL CSerialComm::Init(ConfigArg_t conf)
 {
-	this->serialport->Open(conf.com,conf.baudrate);
+	this->serialport->SetArg(conf.com,conf.baudrate,conf.timeout);
+	TRACE("serial port init: com:%d baudrate:%d timeout:%d \n",conf.com,conf.baudrate,conf.timeout);
 	return TRUE;
+}
+
+void CSerialComm::SetDevName(CString name)
+{
+	CCommunication::SetDevName(name);
+}
+
+CString CSerialComm::GetDevName()
+{
+	return CCommunication::GetDevName();
 }
 
 BOOL CSerialComm::Open()
 {
 	this->serialport->Open();
-	return TRUE;
+	if(this->serialport->IsOpen()){
+		TRACE("open port success\n");
+		return TRUE;
+	}else{
+		TRACE("open port failed.\n");
+		return FALSE;
+	}
 }
+
 BOOL CSerialComm::Close()
 {
 	this->serialport->Close();

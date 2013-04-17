@@ -1,16 +1,20 @@
+#ifndef __TEST_SYSTEM__
+#define __TEST_SYSTEM__
+
 #include <iostream>
+#include "list.h"
 #include "TestModule.h"
 //#include "comm.h"
+#include "SerialComm.h"
+#include "NetworkComm.h"
 
 using namespace std;
 
-#define MAX_MODULES		(100)
-
 class CTestSytem
 {
+public:
 	CCommunication *comm;
-	CTestModule *modules[MAX_MODULES];
-	int n;// num of modules
+	List<CTestModule *> modules;
 	BOOL bTesting; // testing or not
 	
 public:
@@ -18,8 +22,6 @@ public:
 	~CTestSytem();
 	
 	void SetCommunication(CCommunication *comm);
-	void AddModule(CTestModule *module);
-	void RemoveModule(CTestModule *module);
 
 	BOOL DoTest();
 	void StopTest();
@@ -30,3 +32,5 @@ private:
 	void DoReport(BOOL bSuccess);
 	void SaveLog(BOOL bSuccess);
 };
+
+#endif

@@ -1,43 +1,23 @@
 #include "StdAfx.h"
 #include "TestSystem.h"
 
+//
 CTestSytem::CTestSytem()
 {
-	n=0;
+	TRACE("new CTestSystem");
 	bTesting=FALSE;
 }
 
 CTestSytem::~CTestSytem()
 {
-	n=0;
 	comm->~CCommunication();
 	delete comm;
+	TRACE("new CTestSystem");
 }
 
 void CTestSytem::SetCommunication(CCommunication *comm)
 {
 	this->comm=comm;
-}
-
-void CTestSytem::AddModule(CTestModule *module)
-{
-	module->comm = this->comm;
-	modules[this->n]=module;
-	n++;
-}
-
-void CTestSytem::RemoveModule(CTestModule *module)
-{
-	int i;
-	for ( i = 0; i < n; i++ ){
-		if ( modules[i] == module ){
-			cout << "remove "<< i << endl;
-			for( ; i < (n - 1); i++ ){
-				modules[i] = modules[i+1];
-			}
-			break;
-		}
-	}
 }
 
 void CTestSytem::TestInit()
@@ -67,8 +47,9 @@ BOOL CTestSytem::DoTest()
 			continue;
 		}
 		// handshake success, do test modules...
-		for ( i = 0; i < n; i++ ){
-			if(modules[i]->PerformTest()==FALSE){
+		for ( i = 0; i < modules.length(); i++ ){
+			CTestModule *module=modules.at(i);
+			if(module->PerformTest()==FALSE){
 				cout << "module " << i << " test failed, please check it!" << endl;
 				DoReport(FALSE);
 				break;

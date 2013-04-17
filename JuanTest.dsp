@@ -90,7 +90,7 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\comm.cpp
+SOURCE=.\DoTestDlg.cpp
 # End Source File
 # Begin Source File
 
@@ -114,8 +114,16 @@ SOURCE=.\SerialComm.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\serialport.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\TestDialog.cpp
 # End Source File
 # Begin Source File
 
@@ -143,11 +151,19 @@ SOURCE=.\comm.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DoTestDlg.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\JuanTest.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\JuanTestDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\list.h
 # End Source File
 # Begin Source File
 
@@ -168,6 +184,10 @@ SOURCE=.\serialport.h
 # Begin Source File
 
 SOURCE=.\StdAfx.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TestDialog.h
 # End Source File
 # Begin Source File
 
