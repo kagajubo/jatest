@@ -15,14 +15,14 @@ Class3=CAboutDlg
 ResourceCount=8
 Resource1=IDD_OEM_MODULE
 Resource2=IDR_MAINFRAME
-Resource3=IDD_JUANTEST_DIALOG
+Resource3=IDD_DIALOG_TEST
 Resource4=IDD_JUANTEST_SET
 Resource5=IDD_TEST_MODULE
 Class4=CTestModuleDlg
 Class5=CTestOemDlg
 Resource6=IDD_ABOUTBOX
 Class6=CDoTestDlg
-Resource7=IDD_DIALOG_TEST
+Resource7=IDD_JUANTEST_DIALOG
 Class7=CTestDialog
 Resource8=IDD_DIALOG1
 

@@ -1,0 +1,8 @@
+有关OEM的说明：
+1》OEM必须使用用USB，并且在U盘<根目录>下面必须准备好OEM所须的文件
+OEM Logo 所须文件：vga.jpg (分辩率800x600  大小<64K   格式jpg);
+	cvbs.jpg (分辩率720x576  大小<64K  格式jpg);
+OEM 型号 所须文件：在安装目录（C:\Program Files\AutoDVRTEST\oem\）下可找到
+	update.sh （不能更改）
+	update.ini (将所要更改的型号名填在model项里面）
+2》测试时在切换到OEM选项卡，勾选所需的OEM项目	
