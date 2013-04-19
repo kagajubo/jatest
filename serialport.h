@@ -1,52 +1,44 @@
 /*
-Module : SerialPort.H
-Purpose: Interface for an MFC wrapper class for serial ports
+Module : SERIALPORT.H
+Purpose: Declaration for an MFC wrapper class for serial ports
+Created: PJN / 31-05-1999
+History: None
 
-Copyright (c) 1999 - 2013 by PJ Naughter.  
-
+Copyright (c) 1999 by PJ Naughter.  
 All rights reserved.
-
-Copyright / Usage Details:
-
-You are allowed to include the source code in any product (commercial, shareware, freeware or otherwise) 
-when your product is released in binary form. You are allowed to modify the source code in any way you want 
-except you cannot modify the copyright details at the top of each module. If you want to distribute source 
-code with your application, then you are only allowed to distribute versions released by the author. This is 
-to maintain a single distribution point for the source code. 
 
 */
 
 
-///////////////////// Macros / Structs etc ////////////////////////////////////
 
-#pragma once
+///////////////////// Macros / Structs etc //////////////////////////
 
 #ifndef __SERIALPORT_H__
 #define __SERIALPORT_H__
 
-#ifndef CSERIALPORT_EXT_CLASS
-#define CSERIALPORT_EXT_CLASS
-#endif
+
+
 
 
 /////////////////////////// Classes ///////////////////////////////////////////
 
-class CSERIALPORT_EXT_CLASS CSerialException : public CException
+
+////// Serial port exception class ////////////////////////////////////////////
+
+void AfxThrowSerialException(DWORD dwError = 0);
+
+class CSerialException : public CException
 {
 public:
 //Constructors / Destructors
 	CSerialException(DWORD dwError);
+	~CSerialException();
 
 //Methods
 #ifdef _DEBUG
 	virtual void Dump(CDumpContext& dc) const;
 #endif
-
-#if _MSC_VER >= 1700
-  virtual BOOL GetErrorMessage(_Out_writes_z_(nMaxError) LPTSTR lpszError, _In_ UINT nMaxError,	_Out_opt_ PUINT pnHelpContext = NULL);
-#else	
-  virtual BOOL GetErrorMessage(__out_ecount_z(nMaxError) LPTSTR lpszError, __in UINT nMaxError, __out_opt PUINT pnHelpContext = NULL);
-#endif
+	virtual BOOL GetErrorMessage(LPTSTR lpstrError, UINT nMaxError,	PUINT pnHelpContext = NULL);
 	CString GetErrorMessage();
 
 //Data members
@@ -56,7 +48,11 @@ protected:
 	DECLARE_DYNAMIC(CSerialException)
 };
 
-class CSERIALPORT_EXT_CLASS CSerialPort
+
+
+//// The actual serial port class /////////////////////////////////////////////
+
+class CSerialPort : public CObject
 {
 public:
 //Enums
@@ -72,11 +68,11 @@ public:
 
   enum Parity
   {    
-    NoParity = 0,
-    OddParity = 1,
-    EvenParity = 2,
-    MarkParity = 3,
-    SpaceParity = 4
+    EvenParity,
+    MarkParity,
+    NoParity,
+    OddParity,
+    SpaceParity
   };
 
   enum StopBits
@@ -88,34 +84,30 @@ public:
 
 //Constructors / Destructors
   CSerialPort();
-  virtual ~CSerialPort();
+  ~CSerialPort();
 
 //General Methods
   void Open(int nPort, DWORD dwBaud = 9600, Parity parity = NoParity, BYTE DataBits = 8, 
-            StopBits stopBits = OneStopBit, FlowControl fc = NoFlowControl, BOOL bOverlapped = FALSE);
-  void Open(LPCTSTR pszPort, DWORD dwBaud = 9600, Parity parity = NoParity, BYTE DataBits = 8, 
-            StopBits stopBits = OneStopBit, FlowControl fc = NoFlowControl, BOOL bOverlapped = FALSE);
+            StopBits stopbits = OneStopBit, FlowControl fc = NoFlowControl, BOOL bOverlapped = FALSE);
   void Close();
   void Attach(HANDLE hComm);
   HANDLE Detach();
   operator HANDLE() const { return m_hComm; };
   BOOL IsOpen() const { return m_hComm != INVALID_HANDLE_VALUE; };
 #ifdef _DEBUG
-  void Dump(CDumpContext& dc) const;
+  void CSerialPort::Dump(CDumpContext& dc) const;
 #endif
 
 //Reading / Writing Methods
   DWORD Read(void* lpBuf, DWORD dwCount);
-  void  Read(void* lpBuf, DWORD dwCount, OVERLAPPED& overlapped, DWORD* pBytesRead=NULL);
-  void  ReadEx(void* lpBuf, DWORD dwCount);
+  BOOL Read(void* lpBuf, DWORD dwCount, OVERLAPPED& overlapped);
+  void ReadEx(void* lpBuf, DWORD dwCount);
   DWORD Write(const void* lpBuf, DWORD dwCount);
-  void  Write(const void* lpBuf, DWORD dwCount, OVERLAPPED& overlapped, DWORD* pBytesWritten=NULL);
-  void  WriteEx(const void* lpBuf, DWORD dwCount);
-  void  TransmitChar(char cChar);
-  void  GetOverlappedResult(OVERLAPPED& overlapped, DWORD& dwBytesTransferred, BOOL bWait);
-  void  CancelIo();
-  DWORD BytesWaiting();
-  BOOL  DataWaiting(DWORD dwTimeout);
+  BOOL Write(const void* lpBuf, DWORD dwCount, OVERLAPPED& overlapped);
+  void WriteEx(const void* lpBuf, DWORD dwCount);
+  void TransmitChar(char cChar);
+  void GetOverlappedResult(OVERLAPPED& overlapped, DWORD& dwBytesTransferred, BOOL bWait);
+  void CancelIo();
 
 //Configuration Methods
   void GetConfig(COMMCONFIG& config);
@@ -151,7 +143,7 @@ public:
   void SetMask(DWORD dwMask);
   void GetMask(DWORD& dwMask);
   void WaitEvent(DWORD& dwMask);
-  BOOL WaitEvent(DWORD& dwMask, OVERLAPPED& overlapped);
+  void WaitEvent(DWORD& dwMask, OVERLAPPED& overlapped);
   
 //Queue Methods
   void Flush();
@@ -165,22 +157,14 @@ public:
 //Overridables
   virtual void OnCompletion(DWORD dwErrorCode, DWORD dwCount, LPOVERLAPPED lpOverlapped);
 
-//Static methods
-  static void ThrowSerialException(DWORD dwError = 0);
-
 protected:
-//Typedefs
-  typedef BOOL (WINAPI CANCELIO)(HANDLE);
-  typedef CANCELIO* LPCANCELIO;
+  HANDLE m_hComm;       //Handle to the comms port
+  BOOL   m_bOverlapped; //Is the port open in overlapped IO
 
-//Static methods
   static void WINAPI _OnCompletion(DWORD dwErrorCode, DWORD dwCount, LPOVERLAPPED lpOverlapped); 
 
-//Member variables
-  HANDLE     m_hComm;        //Handle to the comms port
-  HANDLE     m_hEvent;       //A event handle we need for internal synchronisation
-  HINSTANCE  m_hKernel32;    //Kernel32 handle
-  LPCANCELIO m_lpfnCancelIo; //CancelIO function pointer
+	DECLARE_DYNAMIC(CSerialPort)
 };
+
 
 #endif //__SERIALPORT_H__

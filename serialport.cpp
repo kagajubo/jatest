@@ -1,5 +1,5 @@
 /*
-Module : SerialPort.cpp
+Module : SERIALPORT.CPP
 Purpose: Implementation for an MFC wrapper class for serial ports
 Created: PJN / 31-05-1999
 History: PJN / 03-06-1999 1. Fixed problem with code using CancelIo which does not exist on 95.
@@ -7,165 +7,114 @@ History: PJN / 03-06-1999 1. Fixed problem with code using CancelIo which does n
          PJN / 16-06-1999 1. Fixed a bug whereby CString::ReleaseBuffer was not being called in 
                              CSerialException::GetErrorMessage
          PJN / 29-09-1999 1. Fixed a simple copy and paste bug in CSerialPort::SetDTR
-         PJN / 08-05-2000 1. Fixed an unreferrenced variable in CSerialPort::GetOverlappedResult in VC 6
-         PJN / 10-12-2000 1. Made class destructor virtual
-         PJN / 15-01-2001 1. Attach method now also allows you to specify whether the serial port
-                          is being attached to in overlapped mode
-                          2. Removed some ASSERTs which were unnecessary in some of the functions
-                          3. Updated the Read method which uses OVERLAPPED IO to also return the bytes
-                          read. This allows calls to WriteFile with a zeroed overlapped structure (This
-                          is required when dealing with TAPI and serial communications)
-                          4. Now includes copyright message in the source code and documentation.
-         PJN / 24-03-2001 1. Added a BytesWaiting method
-         PJN / 04-04-2001 1. Provided an overriden version of BytesWaiting which specifies a timeout
-         PJN / 23-04-2001 1. Fixed a memory leak in DataWaiting method
-         PJN / 01-05-2002 1. Fixed a problem in Open method which was failing to initialize the DCB 
-                          structure incorrectly, when calling GetState. Thanks to Ben Newson for this fix.
-         PJN / 29-05-2002 1. Fixed an problem where the GetProcAddress for CancelIO was using the
-                          wrong calling convention
-         PJN / 07-08-2002 1. Changed the declaration of CSerialPort::WaitEvent to be consistent with the
-                          rest of the methods in CSerialPort which can operate in "OVERLAPPED" mode. A note
-                          about the usage of this: If the method succeeds then the overlapped operation
-                          has completed synchronously and there is no need to do a WaitForSingle/MultipleObjects.
-                          If any other unexpected error occurs then a CSerialException will be thrown. See
-                          the implementation of the CSerialPort::DataWaiting which has been rewritten to use
-                          this new design pattern. Thanks to Serhiy Pavlov for spotting this inconsistency.
-         PJN / 20-09-2002 1. Addition of an additional ASSERT in the internal _OnCompletion function.
-                          2. Addition of an optional out parameter to the Write method which operates in 
-                          overlapped mode. Thanks to Kevin Pinkerton for this addition.
-         PJN / 10-04-2006 1. Updated copyright details.
-                          2. Addition of a CSERIALPORT_EXT_CLASS and CSERIALPORT_EXT_API macros which makes 
-                          the class easier to use in an extension dll.
-                          3. Removed derivation of CSerialPort from CObject as it was not really needed.
-                          4. Fixed a number of level 4 warnings in the sample app.
-                          5. Reworked the overlapped IO methods to expose the LPOVERLAPPED structure to client 
-                          code.
-                          6. Updated the documentation to use the same style as the web site.
-                          7. Did a spell check of the HTML documentation.
-                          8. Updated the documentation on possible blocking in Read/Ex function. Thanks to 
-                          D Kerrison for reporting this issue.
-                          9. Fixed a minor issue in the sample app when the code is compiled using /Wp64
-         PJN / 02-06-2006 1. Removed the bOverlapped as a member variable from the class. There was no 
-                          real need for this setting, since the SDK functions will perform their own 
-                          checking of how overlapped operations should
-                          2. Fixed a bug in GetOverlappedResult where the code incorrectly checking against
-                          the error ERROR_IO_PENDING instead of ERROR_IO_INCOMPLETE. Thanks to Sasho Darmonski
-                          for reporting this bug.
-                          3. Reviewed all TRACE statements for correctness.
-         PJN / 05-06-2006 1. Fixed an issue with the creation of the internal event object. It was incorrectly
-                          being created as an auto-reset event object instead of a manual reset event object.
-                          Thanks to Sasho Darmonski for reporting this issue.
-         PJN / 24-06-2006 1. Fixed some typos in the history list. Thanks to Simon Wong for reporting this.
-                          2. Made the class which handles the construction of function pointers at runtime a
-                          member variable of CSerialPort
-                          3. Made AfxThrowSerialPortException part of the CSerialPort class. Thanks to Simon Wong
-                          for reporting this.
-                          4. Removed the unnecessary CSerialException destructor. Thanks to Simon Wong for 
-                          reporting this.
-                          5. Fixed a minor error in the TRACE text in CSerialPort::SetDefaultConfig. Again thanks
-                          to Simon Wong for reporting this. 
-                          6. Code now uses new C++ style casts rather than old style C casts where necessary. 
-                          Again thanks to Simon Wong for reporting this.
-                          7. CSerialException::GetErrorMessage now uses the strsafe functions. This does mean 
-                          that the code now requires the Platform SDK if compiled using VC 6.
-         PJN / 25-06-2006 1. Combined the functionality of the CSerialPortData class into the main CSerialPort class.
-                          2. Renamed AfxThrowSerialPortException to ThrowSerialPortException and made the method
-                          public.
-         PJN / 05-11-2006 1. Minor update to stdafx.h of sample app to avoid compiler warnings in VC 2005.
-                          2. Reverted the use of the strsafe.h header file. Instead now the code uses the VC 2005
-                          Safe CRT and if this is not available, then we fail back to the standard CRT.
-         PJN / 25-01-2007 1. Minor update to remove strsafe.h from stdafx.h of the sample app.
-                          2. Updated copyright details.
-         PJN / 24-12-2007 1. CSerialException::GetErrorMessage now uses the FORMAT_MESSAGE_IGNORE_INSERTS flag. For more information please see Raymond
-                          Chen's blog at http://blogs.msdn.com/oldnewthing/archive/2007/11/28/6564257.aspx. Thanks to Alexey Kuznetsov for reporting this
-                          issue.
-                          2. Simplified the code in CSerialException::GetErrorMessage somewhat.
-                          3. Optimized the CSerialException constructor code.
-                          4. Code now uses newer C++ style casts instead of C style casts.
-                          5. Reviewed and updated all the TRACE logging in the module
-                          6. Replaced all calls to ZeroMemory with memset
-         PJN / 30-12-2007 1. Updated the sample app to clean compile on VC 2008
-                          2. CSerialException::GetErrorMessage now uses Checked::tcsncpy_s if compiled using VC 2005 or later.
-         PJN / 18-05-2008 1. Updated copyright details.
-                          2. Changed the actual values for Parity enum so that they are consistent with the Parity define values in the Windows SDK 
-                          header file WinBase.h. This avoids the potential issue where you use the CSerialPort enum parity values in a call to the
-                          raw Win32 API calls. Thanks to Robert Krueger for reporting this issue.
-         PJN / 21-06-2008 1. Code now compiles cleanly using Code Analysis (/analyze)
-                          2. Updated code to compile correctly using _ATL_CSTRING_EXPLICIT_CONSTRUCTORS define
-                          3. The code now only supports VC 2005 or later. 
-                          4. CSerialPort::Read, Write, GetOverlappedResult & WaitEvent now throw an exception irrespective of whether the last error
-                          is ERROR_IO_PENDING or not
-                          5. Replaced all calls to ZeroMemory with memset
-         PJN / 04-07-2008 1. Provided a version of the Open method which takes a string instead of a numeric port number value. This allows the code
-                          to support some virtual serial port packages which do not use device names of the form "COM%d". Thanks to David Balazic for 
-                          suggesting this addition.
-         PJN / 25-01-2012 1. Updated copyright details.
-                          2. Updated sample app and class to compile cleanly on VC 2010 and later.
 
-Copyright (c) 1996 - 2013 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
-
+Copyright (c) 1999 by PJ Naughter.  
 All rights reserved.
-
-Copyright / Usage Details:
-
-You are allowed to include the source code in any product (commercial, shareware, freeware or otherwise) 
-when your product is released in binary form. You are allowed to modify the source code in any way you want 
-except you cannot modify the copyright details at the top of each module. If you want to distribute source 
-code with your application, then you are only allowed to distribute versions released by the author. This is 
-to maintain a single distribution point for the source code. 
 
 */
 
-
-///////////////////////////////// Includes ////////////////////////////////////
-
+/////////////////////////////////  Includes  //////////////////////////////////
 #include "stdafx.h"
-#include "SerialPort.h"
-#ifndef _WINERROR_
-#pragma message("To avoid this message, please put WinError.h in your pre compiled header (normally stdafx.h)")
-#include <WinError.h>
-#endif
+#include "serialport.h"
+#include "winerror.h"
 
 
-///////////////////////////////// Defines /////////////////////////////////////
+
+
+///////////////////////////////// defines /////////////////////////////////////
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
 #endif
+
+
 
 
 //////////////////////////////// Implementation ///////////////////////////////
 
-#if _MSC_VER >= 1700
-BOOL CSerialException::GetErrorMessage(_Out_writes_z_(nMaxError) LPTSTR lpszError, _In_ UINT nMaxError,	_Out_opt_ PUINT pnHelpContext)
-#else	
-BOOL CSerialException::GetErrorMessage(__out_ecount_z(nMaxError) LPTSTR lpszError, __in UINT nMaxError, __out_opt PUINT pnHelpContext)
-#endif
+
+
+//Class which handles CancelIo function which must be constructed at run time
+//since it is not imeplemented on NT 3.51 or Windows 95. To avoid the loader
+//bringing up a message such as "Failed to load due to missing export...", the
+//function is constructed using GetProcAddress. The CSerialPort::CancelIo 
+//function then checks to see if the function pointer is NULL and if it is it 
+//throws an exception using the error code ERROR_CALL_NOT_IMPLEMENTED which
+//is what 95 would have done if it had implemented a stub for it in the first
+//place !!
+
+class _SERIAL_PORT_DATA
 {
-  //Validate our parameters
-	ASSERT(lpszError != NULL && AfxIsValidString(lpszError, nMaxError));
-		
+public:
+//Constructors /Destructors
+  _SERIAL_PORT_DATA();
+  ~_SERIAL_PORT_DATA();
+
+  HINSTANCE m_hKernel32;
+  typedef BOOL (CANCELIO)(HANDLE);
+  typedef CANCELIO* LPCANCELIO;
+  LPCANCELIO m_lpfnCancelIo;
+};
+
+_SERIAL_PORT_DATA::_SERIAL_PORT_DATA()
+{
+  m_hKernel32 = LoadLibrary(_T("KERNEL32.DLL"));
+  VERIFY(m_hKernel32 != NULL);
+  m_lpfnCancelIo = (LPCANCELIO) GetProcAddress(m_hKernel32, "CancelIo");
+}
+
+_SERIAL_PORT_DATA::~_SERIAL_PORT_DATA()
+{
+  FreeLibrary(m_hKernel32);
+  m_hKernel32 = NULL;
+}
+
+
+//The local variable which handle the function pointers
+
+_SERIAL_PORT_DATA _SerialPortData;
+
+
+
+
+////////// Exception handling code
+
+void AfxThrowSerialException(DWORD dwError /* = 0 */)
+{
+	if (dwError == 0)
+		dwError = ::GetLastError();
+
+	CSerialException* pException = new CSerialException(dwError);
+
+	TRACE(_T("Warning: throwing CSerialException for error %d\n"), dwError);
+	THROW(pException);
+}
+
+BOOL CSerialException::GetErrorMessage(LPTSTR pstrError, UINT nMaxError, PUINT pnHelpContext)
+{
+	ASSERT(pstrError != NULL && AfxIsValidString(pstrError, nMaxError));
+
 	if (pnHelpContext != NULL)
 		*pnHelpContext = 0;
-		
-  //What will be the return value from this function (assume the worst)
-  BOOL bSuccess = FALSE;
 
 	LPTSTR lpBuffer;
-	DWORD dwReturn = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-			                           NULL,  m_dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_SYS_DEFAULT),
-			                           reinterpret_cast<LPTSTR>(&lpBuffer), 0, NULL);
+	BOOL bRet = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+			                      NULL,  m_dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_SYS_DEFAULT),
+			                      (LPTSTR) &lpBuffer, 0, NULL);
 
-	if (dwReturn == 0)
-		*lpszError = _T('\0');
+	if (bRet == FALSE)
+		*pstrError = '\0';
 	else
 	{
-	  bSuccess = TRUE;
-	  Checked::tcsncpy_s(lpszError, nMaxError, lpBuffer, _TRUNCATE);  
+		lstrcpyn(pstrError, lpBuffer, nMaxError);
+		bRet = TRUE;
+
 		LocalFree(lpBuffer);
 	}
 
-	return bSuccess;
+	return bRet;
 }
 
 CString CSerialException::GetErrorMessage()
@@ -177,7 +126,12 @@ CString CSerialException::GetErrorMessage()
   return rVal;
 }
 
-CSerialException::CSerialException(DWORD dwError) : m_dwError(dwError)
+CSerialException::CSerialException(DWORD dwError)
+{
+	m_dwError = dwError;
+}
+
+CSerialException::~CSerialException()
 {
 }
 
@@ -188,19 +142,20 @@ void CSerialException::Dump(CDumpContext& dc) const
 {
 	CObject::Dump(dc);
 
-	dc << _T("m_dwError = ") << m_dwError << _T("\n");
+	dc << "m_dwError = " << m_dwError;
 }
 #endif
 
 
-CSerialPort::CSerialPort() : m_hComm(INVALID_HANDLE_VALUE),
-                             m_hEvent(NULL)
+
+
+
+////////// The actual serial port code
+
+CSerialPort::CSerialPort()
 {
-  m_hKernel32 = GetModuleHandle(_T("KERNEL32.DLL"));
-  if (m_hKernel32)
-    m_lpfnCancelIo = reinterpret_cast<LPCANCELIO>(GetProcAddress(m_hKernel32, "CancelIo"));
-  else
-    m_lpfnCancelIo = NULL;
+  m_hComm = INVALID_HANDLE_VALUE;
+  m_bOverlapped = FALSE;
 }
 
 CSerialPort::~CSerialPort()
@@ -208,50 +163,37 @@ CSerialPort::~CSerialPort()
   Close();
 }
 
-void CSerialPort::ThrowSerialException(DWORD dwError)
-{
-	if (dwError == 0)
-		dwError = ::GetLastError();
-
-	CSerialException* pException = new CSerialException (dwError);
-
-	TRACE(_T("Warning: throwing CSerialException for error %d\n"), dwError);
-	THROW(pException);
-}
+IMPLEMENT_DYNAMIC(CSerialPort, CObject)
 
 #ifdef _DEBUG
 void CSerialPort::Dump(CDumpContext& dc) const
 {
+	CObject::Dump(dc);
+
 	dc << _T("m_hComm = ") << m_hComm << _T("\n");
+  dc << _T("m_bOverlapped = ") << m_bOverlapped;
 }
 #endif
 
-void CSerialPort::Open(LPCTSTR pszPort, DWORD dwBaud, Parity parity, BYTE DataBits, StopBits stopBits, FlowControl fc, BOOL bOverlapped)
+void CSerialPort::Open(int nPort, DWORD dwBaud, Parity parity, BYTE DataBits, StopBits stopbits, FlowControl fc, BOOL bOverlapped)
 {
-  Close(); //In case we are already open
+  //Validate our parameters
+  ASSERT(nPort>0 && nPort<=255);
 
-  //Call CreateFile to open the comms port
-  m_hComm = CreateFile(pszPort, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, bOverlapped ? FILE_FLAG_OVERLAPPED : 0, NULL);
+  //Call CreateFile to open up the comms port
+  CString sPort;
+  sPort.Format(_T("\\\\.\\COM%d"), nPort);
+  m_hComm = CreateFile(sPort, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, bOverlapped ? FILE_FLAG_OVERLAPPED : 0, NULL);
   if (m_hComm == INVALID_HANDLE_VALUE)
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::Open, Failed to open the comms port, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
-  }
-
-  //Create the event we need for later synchronisation use
-  m_hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-  if (m_hEvent == NULL)
-  {
-    DWORD dwLastError = GetLastError();
-    Close();
-    TRACE(_T("CSerialPort::Open, Failed in call to CreateEvent in Open, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed to open up the comms port\n"));
+    AfxThrowSerialException();
   }
   
+  m_bOverlapped = bOverlapped;
+
   //Get the current state prior to changing it
   DCB dcb;
-  dcb.DCBlength = sizeof(DCB);
   GetState(dcb);
 
   //Setup the baud rate
@@ -260,64 +202,24 @@ void CSerialPort::Open(LPCTSTR pszPort, DWORD dwBaud, Parity parity, BYTE DataBi
   //Setup the Parity
   switch (parity)
   {
-    case EvenParity:  
-    {
-      dcb.Parity = EVENPARITY;
-      break;
-    }
-    case MarkParity:  
-    {
-      dcb.Parity = MARKPARITY;
-      break;
-    }
-    case NoParity:    
-    {
-      dcb.Parity = NOPARITY;
-      break;
-    }
-    case OddParity:   
-    {
-      dcb.Parity = ODDPARITY;
-      break;
-    }
-    case SpaceParity: 
-    {
-      dcb.Parity = SPACEPARITY;
-      break;
-    }
-    default:          
-    {
-      ASSERT(FALSE);            
-      break;
-    }
+    case EvenParity:  dcb.Parity = EVENPARITY;  break;
+    case MarkParity:  dcb.Parity = MARKPARITY;  break;
+    case NoParity:    dcb.Parity = NOPARITY;    break;
+    case OddParity:   dcb.Parity = ODDPARITY;   break;
+    case SpaceParity: dcb.Parity = SPACEPARITY; break;
+    default:          ASSERT(FALSE);            break;
   }
 
   //Setup the data bits
   dcb.ByteSize = DataBits;
 
   //Setup the stop bits
-  switch (stopBits)
+  switch (stopbits)
   {
-    case OneStopBit:           
-    {
-      dcb.StopBits = ONESTOPBIT; 
-      break;
-    }
-    case OnePointFiveStopBits: 
-    {
-      dcb.StopBits = ONE5STOPBITS;
-      break;
-    }
-    case TwoStopBits:          
-    {
-      dcb.StopBits = TWOSTOPBITS;
-      break;
-    }
-    default:                   
-    {
-      ASSERT(FALSE);
-      break;
-    }
+    case OneStopBit:           dcb.StopBits = ONESTOPBIT;   break;
+    case OnePointFiveStopBits: dcb.StopBits = ONE5STOPBITS; break;
+    case TwoStopBits:          dcb.StopBits = TWOSTOPBITS;  break;
+    default:                   ASSERT(FALSE);               break;
   }
 
   //Setup the flow control 
@@ -391,165 +293,124 @@ void CSerialPort::Open(LPCTSTR pszPort, DWORD dwBaud, Parity parity, BYTE DataBi
   SetState(dcb);
 }
 
-void CSerialPort::Open(int nPort, DWORD dwBaud, Parity parity, BYTE DataBits, StopBits stopBits, FlowControl fc, BOOL bOverlapped)
-{
-  //Form the string version of the port number
-  CString sPort;
-  sPort.Format(_T("\\\\.\\COM%d"), nPort);
-
-  //Then delegate the work to the other version of Open
-  Open(sPort, dwBaud, parity, DataBits, stopBits, fc, bOverlapped);
-}
-
 void CSerialPort::Close()
 {
   if (IsOpen())
   {
-    //Close down the comms port
     BOOL bSuccess = CloseHandle(m_hComm);
     m_hComm = INVALID_HANDLE_VALUE;
     if (!bSuccess)
-      TRACE(_T("CSerialPort::Close, Failed to close up the comms port, Error:%d\n"), GetLastError());
-
-    //Free the event object we are using
-    if (m_hEvent)
-    {
-      CloseHandle(m_hEvent);
-      m_hEvent = NULL;
-    }
+      TRACE(_T("Failed to close up the comms port, GetLastError:%d\n"), GetLastError());
+    m_bOverlapped = FALSE;
   }
 }
 
 void CSerialPort::Attach(HANDLE hComm)
 {
   Close();
-
-  //Validate our parameters, now that the port has been closed
-  ASSERT(m_hComm == INVALID_HANDLE_VALUE);
-  ASSERT(m_hEvent == NULL);
-
   m_hComm = hComm;  
-
-  //Create the event we need for later synchronisation use
-  m_hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-  if (m_hEvent == NULL)
-  {
-    DWORD dwLastError = GetLastError();
-    Close();
-    TRACE(_T("CSerialPort::Attach, Failed in call to CreateEvent in Attach, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
-  }
 }
 
 HANDLE CSerialPort::Detach()
 {
-  //What will be the return value from this function
   HANDLE hrVal = m_hComm;
-
   m_hComm = INVALID_HANDLE_VALUE;
-
-  if (m_hEvent)
-  {
-    CloseHandle(m_hEvent);
-    m_hEvent = NULL;
-  }
-
   return hrVal;
 }
 
 DWORD CSerialPort::Read(void* lpBuf, DWORD dwCount)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
+  ASSERT(!m_bOverlapped);
 
   DWORD dwBytesRead = 0;
   if (!ReadFile(m_hComm, lpBuf, dwCount, &dwBytesRead, NULL))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::Read, Failed in call to ReadFile, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to ReadFile\n"));
+    AfxThrowSerialException();
   }
 
   return dwBytesRead;
 }
 
-void CSerialPort::Read(void* lpBuf, DWORD dwCount, OVERLAPPED& overlapped, DWORD* pBytesRead)
+BOOL CSerialPort::Read(void* lpBuf, DWORD dwCount, OVERLAPPED& overlapped)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
+  ASSERT(m_bOverlapped);
+  ASSERT(overlapped.hEvent);
 
   DWORD dwBytesRead = 0;
   BOOL bSuccess = ReadFile(m_hComm, lpBuf, dwCount, &dwBytesRead, &overlapped);
   if (!bSuccess)
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::Read, Failed in call to ReadFile, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    if (GetLastError() != ERROR_IO_PENDING)
+    {
+      TRACE(_T("Failed in call to ReadFile\n"));
+      AfxThrowSerialException();
+    }
   }
-  else
-  {
-    if (pBytesRead)
-      *pBytesRead = dwBytesRead;
-  }
+  return bSuccess;
 }
 
 DWORD CSerialPort::Write(const void* lpBuf, DWORD dwCount)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
+  ASSERT(!m_bOverlapped);
 
   DWORD dwBytesWritten = 0;
   if (!WriteFile(m_hComm, lpBuf, dwCount, &dwBytesWritten, NULL))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::Write, Failed in call to WriteFile, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to WriteFile\n"));
+    AfxThrowSerialException();
   }
 
   return dwBytesWritten;
 }
 
-void CSerialPort::Write(const void* lpBuf, DWORD dwCount, OVERLAPPED& overlapped, DWORD* pBytesWritten)
+BOOL CSerialPort::Write(const void* lpBuf, DWORD dwCount, OVERLAPPED& overlapped)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
+  ASSERT(m_bOverlapped);
+  ASSERT(overlapped.hEvent);
 
   DWORD dwBytesWritten = 0;
   BOOL bSuccess = WriteFile(m_hComm, lpBuf, dwCount, &dwBytesWritten, &overlapped);
   if (!bSuccess)
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::Write, Failed in call to WriteFile, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    if (GetLastError() != ERROR_IO_PENDING)
+    {
+      TRACE(_T("Failed in call to WriteFile\n"));
+      AfxThrowSerialException();
+    }
   }
-  else
-  {
-    if (pBytesWritten)
-      *pBytesWritten = dwBytesWritten;
-  }
+  return bSuccess;
 }
 
 void CSerialPort::GetOverlappedResult(OVERLAPPED& overlapped, DWORD& dwBytesTransferred, BOOL bWait)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
+  ASSERT(m_bOverlapped);
+  ASSERT(overlapped.hEvent);
 
+  DWORD dwBytesWritten = 0;
   if (!::GetOverlappedResult(m_hComm, &overlapped, &dwBytesTransferred, bWait))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::GetOverlappedResult, Failed in call to GetOverlappedResult, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    if (GetLastError() != ERROR_IO_PENDING)
+    {
+      TRACE(_T("Failed in call to GetOverlappedResult\n"));
+      AfxThrowSerialException();
+    }
   }
 }
 
 void CSerialPort::_OnCompletion(DWORD dwErrorCode, DWORD dwCount, LPOVERLAPPED lpOverlapped)
 {
   //Validate our parameters
-  AFXASSUME(lpOverlapped);
+  ASSERT(lpOverlapped);
 
   //Convert back to the C++ world
-  CSerialPort* pSerialPort = static_cast<CSerialPort*>(lpOverlapped->hEvent);
-  AFXASSUME(pSerialPort);
+  CSerialPort* pSerialPort = (CSerialPort*) lpOverlapped->hEvent;
+  ASSERT(pSerialPort->IsKindOf(RUNTIME_CLASS(CSerialPort)));
 
   //Call the C++ function
   pSerialPort->OnCompletion(dwErrorCode, dwCount, lpOverlapped);
@@ -557,194 +418,133 @@ void CSerialPort::_OnCompletion(DWORD dwErrorCode, DWORD dwCount, LPOVERLAPPED l
 
 void CSerialPort::OnCompletion(DWORD /*dwErrorCode*/, DWORD /*dwCount*/, LPOVERLAPPED lpOverlapped)
 {
-  //Just free the memory which was previously allocated for the OVERLAPPED structure
+  //Just free up the memory which was previously allocated for the OVERLAPPED structure
   delete lpOverlapped;
 
   //Your derived classes can do something useful in OnCompletion, but don't forget to
-  //call CSerialPort::OnCompletion to ensure the memory is freed
+  //call CSerialPort::OnCompletion to ensure the memory is freed up
 }
 
 void CSerialPort::CancelIo()
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
-  if (m_lpfnCancelIo == NULL)
+  if (_SerialPortData.m_lpfnCancelIo == NULL)
   {
-    TRACE(_T("CSerialPort::CancelIo, CancelIo function is not supported on this OS. You need to be running at least NT 4 or Win 98 to use this function\n"));
-    ThrowSerialException(ERROR_CALL_NOT_IMPLEMENTED);  
+    TRACE(_T("CancelIo function is not supported on this OS. You need to be running at least NT 4 or Win 98 to use this function\n"));
+    AfxThrowSerialException(ERROR_CALL_NOT_IMPLEMENTED);  
   }
 
-  if (!m_lpfnCancelIo(m_hComm))
+  if (!::_SerialPortData.m_lpfnCancelIo(m_hComm))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("Failed in call to CancelIO, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to CancelIO\n"));
+    AfxThrowSerialException();
   }
-}
-
-DWORD CSerialPort::BytesWaiting()
-{
-  //Validate our parameters
-  ASSERT(IsOpen());
-
-  //Check to see how many characters are unread
-  COMSTAT stat;
-  GetStatus(stat);
-  return stat.cbInQue;
-}
-
-BOOL CSerialPort::DataWaiting(DWORD dwTimeout)
-{
-  //Validate our parameters
-  ASSERT(IsOpen());
-
-  //Setup to wait for incoming data
-  DWORD dwOldMask;
-  GetMask(dwOldMask);
-  SetMask(EV_RXCHAR);
-
-  //Setup the overlapped structure
-  OVERLAPPED o;
-  o.hEvent = m_hEvent;
-
-  //Assume the worst;
-  BOOL bSuccess = FALSE;
-
-  DWORD dwEvent;
-  bSuccess = WaitEvent(dwEvent, o);
-  if (!bSuccess)
-  {
-    if (WaitForSingleObject(o.hEvent, dwTimeout) == WAIT_OBJECT_0)
-    {
-      DWORD dwBytesTransferred;
-      GetOverlappedResult(o, dwBytesTransferred, FALSE);
-      bSuccess = TRUE;
-    }
-  }
-
-  //Reset the event mask
-  SetMask(dwOldMask);
-
-  return bSuccess;
 }
 
 void CSerialPort::WriteEx(const void* lpBuf, DWORD dwCount)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   OVERLAPPED* pOverlapped = new OVERLAPPED;
-  memset(pOverlapped, 0, sizeof(OVERLAPPED));
-  pOverlapped->hEvent = static_cast<HANDLE>(this);
+  ZeroMemory(pOverlapped, sizeof(OVERLAPPED));
+  pOverlapped->hEvent = (HANDLE) this;
   if (!WriteFileEx(m_hComm, lpBuf, dwCount, pOverlapped, _OnCompletion))
   {
-    DWORD dwLastError = GetLastError();
     delete pOverlapped;
-    TRACE(_T("CSerialPort::WriteEx, Failed in call to WriteFileEx, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to WriteFileEx\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::ReadEx(void* lpBuf, DWORD dwCount)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   OVERLAPPED* pOverlapped = new OVERLAPPED;
-  memset(pOverlapped, 0, sizeof(OVERLAPPED));
-  pOverlapped->hEvent = static_cast<HANDLE>(this);
+  ZeroMemory(pOverlapped, sizeof(OVERLAPPED));
+  pOverlapped->hEvent = (HANDLE) this;
   if (!ReadFileEx(m_hComm, lpBuf, dwCount, pOverlapped, _OnCompletion))
   {
-    DWORD dwLastError = GetLastError();
     delete pOverlapped;
-    TRACE(_T("CSerialPort::ReadEx, Failed in call to ReadFileEx, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to ReadFileEx\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::TransmitChar(char cChar)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!TransmitCommChar(m_hComm, cChar))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::TransmitChar, Failed in call to TransmitCommChar, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to TransmitCommChar\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::GetConfig(COMMCONFIG& config)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   DWORD dwSize = sizeof(COMMCONFIG);
   if (!GetCommConfig(m_hComm, &config, &dwSize))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::GetConfig, Failed in call to GetCommConfig, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to GetCommConfig\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::SetConfig(COMMCONFIG& config)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   DWORD dwSize = sizeof(COMMCONFIG);
   if (!SetCommConfig(m_hComm, &config, dwSize))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::SetConfig, Failed in call to SetCommConfig, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to SetCommConfig\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::SetBreak()
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!SetCommBreak(m_hComm))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::SetBreak, Failed in call to SetCommBreak, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to SetCommBreak\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::ClearBreak()
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!ClearCommBreak(m_hComm))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::ClearBreak, Failed in call to SetCommBreak, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to SetCommBreak\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::ClearError(DWORD& dwErrors)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!ClearCommError(m_hComm, &dwErrors, NULL))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::ClearError, Failed in call to ClearCommError, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to ClearCommError\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::GetDefaultConfig(int nPort, COMMCONFIG& config)
 {
+  //Validate our parameters
+  ASSERT(nPort>0 && nPort<=255);
+
   //Create the device name as a string
   CString sPort;
   sPort.Format(_T("COM%d"), nPort);
@@ -752,14 +552,16 @@ void CSerialPort::GetDefaultConfig(int nPort, COMMCONFIG& config)
   DWORD dwSize = sizeof(COMMCONFIG);
   if (!GetDefaultCommConfig(sPort, &config, &dwSize))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::GetDefaultConfig, Failed in call to GetDefaultCommConfig, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to GetDefaultCommConfig\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::SetDefaultConfig(int nPort, COMMCONFIG& config)
 {
+  //Validate our parameters
+  ASSERT(nPort>0 && nPort<=255);
+
   //Create the device name as a string
   CString sPort;
   sPort.Format(_T("COM%d"), nPort);
@@ -767,62 +569,53 @@ void CSerialPort::SetDefaultConfig(int nPort, COMMCONFIG& config)
   DWORD dwSize = sizeof(COMMCONFIG);
   if (!SetDefaultCommConfig(sPort, &config, dwSize))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::SetDefaultConfig, Failed in call to SetDefaultCommConfig, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to GetDefaultCommConfig\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::GetStatus(COMSTAT& stat)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   DWORD dwErrors;
   if (!ClearCommError(m_hComm, &dwErrors, &stat))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::GetStatus, Failed in call to ClearCommError, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to ClearCommError\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::GetState(DCB& dcb)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!GetCommState(m_hComm, &dcb))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::GetState, Failed in call to GetCommState, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to GetCommState\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::SetState(DCB& dcb)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!SetCommState(m_hComm, &dcb))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::SetState, Failed in call to SetCommState, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to SetCommState\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::Escape(DWORD dwFunc)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!EscapeCommFunction(m_hComm, dwFunc))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::Escape, Failed in call to EscapeCommFunction, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to EscapeCommFunction\n"));
+    AfxThrowSerialException();
   }
 }
 
@@ -858,79 +651,67 @@ void CSerialPort::SetXON()
 
 void CSerialPort::GetProperties(COMMPROP& properties)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!GetCommProperties(m_hComm, &properties))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::GetProperties, Failed in call to GetCommProperties, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to GetCommProperties\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::GetModemStatus(DWORD& dwModemStatus)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!GetCommModemStatus(m_hComm, &dwModemStatus))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::GetModemStatus, Failed in call to GetCommModemStatus, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to GetCommModemStatus\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::SetMask(DWORD dwMask)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!SetCommMask(m_hComm, dwMask))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::SetMask, Failed in call to SetCommMask, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to SetCommMask\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::GetMask(DWORD& dwMask)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!GetCommMask(m_hComm, &dwMask))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::GetMask, Failed in call to GetCommMask, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to GetCommMask\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::Flush()
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!FlushFileBuffers(m_hComm))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::Flush, Failed in call to FlushFileBuffers, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to FlushFileBuffers\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::Purge(DWORD dwFlags)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!PurgeComm(m_hComm, dwFlags))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::Purge, Failed in call to PurgeComm, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to PurgeComm\n"));
+    AfxThrowSerialException();
   }
 }
 
@@ -956,48 +737,46 @@ void CSerialPort::ClearReadBuffer()
 
 void CSerialPort::Setup(DWORD dwInQueue, DWORD dwOutQueue)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!SetupComm(m_hComm, dwInQueue, dwOutQueue))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::Setup, Failed in call to SetupComm, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to SetupComm\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::SetTimeouts(COMMTIMEOUTS& timeouts)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!SetCommTimeouts(m_hComm, &timeouts))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::SetTimeouts, Failed in call to SetCommTimeouts, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to SetCommTimeouts\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::GetTimeouts(COMMTIMEOUTS& timeouts)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
 
   if (!GetCommTimeouts(m_hComm, &timeouts))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::GetTimeouts, Failed in call to GetCommTimeouts, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to GetCommTimeouts\n"));
+    AfxThrowSerialException();
   }
 }
 
 void CSerialPort::Set0Timeout()
 {
   COMMTIMEOUTS Timeouts;
-  memset(&Timeouts, 0, sizeof(Timeouts));
+  ZeroMemory(&Timeouts, sizeof(COMMTIMEOUTS));
   Timeouts.ReadIntervalTimeout = MAXDWORD;
+  Timeouts.ReadTotalTimeoutMultiplier = 0;
+  Timeouts.ReadTotalTimeoutConstant = 0;
+  Timeouts.WriteTotalTimeoutMultiplier = 0;
+  Timeouts.WriteTotalTimeoutConstant = 0;
   SetTimeouts(Timeouts);
 }
 
@@ -1022,30 +801,28 @@ void CSerialPort::Set0ReadTimeout()
 
 void CSerialPort::WaitEvent(DWORD& dwMask)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
+  ASSERT(!m_bOverlapped);
 
   if (!WaitCommEvent(m_hComm, &dwMask, NULL))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::WaitEvent, Failed in call to WaitCommEvent, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    TRACE(_T("Failed in call to WaitCommEvent\n"));
+    AfxThrowSerialException();
   }
 }
 
-BOOL CSerialPort::WaitEvent(DWORD& dwMask, OVERLAPPED& overlapped)
+void CSerialPort::WaitEvent(DWORD& dwMask, OVERLAPPED& overlapped)
 {
-  //Validate our parameters
   ASSERT(IsOpen());
+  ASSERT(m_bOverlapped);
   ASSERT(overlapped.hEvent);
 
-  BOOL bSuccess = WaitCommEvent(m_hComm, &dwMask, &overlapped);
-  if (!bSuccess)
+  if (!WaitCommEvent(m_hComm, &dwMask, &overlapped))
   {
-    DWORD dwLastError = GetLastError();
-    TRACE(_T("CSerialPort::WaitEvent, Failed in call to WaitCommEvent, Error:%d\n"), dwLastError);
-    ThrowSerialException(dwLastError);
+    if (GetLastError() != ERROR_IO_PENDING)
+    {
+      TRACE(_T("Failed in call to WaitCommEvent\n"));
+      AfxThrowSerialException();
+    }
   }
-
-  return bSuccess;
 }

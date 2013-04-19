@@ -6,7 +6,7 @@
 CSerialComm::CSerialComm()
 {
 	TRACE("new CSerialComm \n");
-	this->serialport=new cnComm();
+	this->serialport=new CSerialPort();
 	type=COMM_TYPE_SERIAL;
 	dev_name="null";
 }
@@ -15,12 +15,12 @@ CSerialComm::~CSerialComm()
 {
 	TRACE("delete CSerialComm \n");
 	this->Close();
-	delete this->serialport;
+	//delete this->serialport;
 }
 
 BOOL CSerialComm::Init(ConfigArg_t conf)
 {
-	this->serialport->SetArg(conf.com,conf.baudrate,conf.timeout);
+	//this->serialport->SetArg(conf.com,conf.baudrate,conf.timeout);
 	TRACE("serial port init: com:%d baudrate:%d timeout:%d \n",conf.com,conf.baudrate,conf.timeout);
 	return TRUE;
 }

@@ -14,7 +14,6 @@
 class CTestDialog : public CDialog
 {
 private:
-	cnComm *serialport;
 
 // Construction
 public:

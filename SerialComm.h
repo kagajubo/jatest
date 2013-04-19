@@ -9,7 +9,7 @@
 class CSerialComm : public CCommunication
 {
 protected:
-	cnComm *serialport;
+	CSerialPort *serialport;
 
 public:
 	CSerialComm();

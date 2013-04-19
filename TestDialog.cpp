@@ -49,10 +49,6 @@ void CTestDialog::OnOK()
 	
 	//CDialog::OnOK();
 
-	CString sz_send;
-	GetDlgItem(IDC_EDIT1)->GetWindowText(sz_send);
-	TRACE("send:%s \n",sz_send.GetBuffer(sz_send.GetLength()));
-	serialport->WriteLine(sz_send.GetBuffer(sz_send.GetLength()));
 }
 
 BOOL CTestDialog::OnInitDialog() 
@@ -60,13 +56,6 @@ BOOL CTestDialog::OnInitDialog()
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	serialport=new cnComm(false,0);
-	serialport->Open(3,115200);
-	if(serialport->IsOpen() == true){
-		TRACE("open success\n");
-	}else{
-		TRACE("open failed.\n");
-	}
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -74,24 +63,11 @@ BOOL CTestDialog::OnInitDialog()
 void CTestDialog::OnCancel() 
 {
 	// TODO: Add extra cleanup here
-	CString sz_recv;
-	char buf[512];
-	serialport->Read(buf,sizeof(buf));
-	TRACE("recv :%s \n",buf);
-	sz_recv = buf;
-	GetDlgItem(IDC_EDIT2)->SetWindowText(sz_recv);
 }
 
 void CTestDialog::OnButton1() 
 {
 	// TODO: Add your control notification handler code here	
-	CString sz_recv;
-	char buf[512];
-	serialport->ReadLine(buf,sizeof(buf));
-	TRACE("recv :%s \n",buf);
-	sz_recv = buf;
-	GetDlgItem(IDC_EDIT2)->SetWindowText(sz_recv);
-
 	
 }
 
